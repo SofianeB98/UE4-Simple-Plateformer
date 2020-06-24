@@ -21,18 +21,17 @@ AEvilPic::AEvilPic()
 	StaticMesh->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
 	StaticMesh->SetupAttachment(RootComponent);
 
-	if (useOverlap)
-	{
-		SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AEvilPic::OnOverlapBegin);
-		PrimaryActorTick.bCanEverTick = false;
-	}
 }
 
 // Called when the game starts or when spawned
 void AEvilPic::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	if (useOverlap)
+	{
+		PrimaryActorTick.bCanEverTick = false;
+		SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AEvilPic::OnOverlapBegin);
+	}
 }
 
 void AEvilPic::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -68,14 +67,13 @@ void AEvilPic::Tick(float DeltaTime)
 
 		for (int i = 0; i < rayNumber; i++)
 		{
-			endLocation = startLocation + GetActorUpVector() * rayLength;;
-			GetWorld()->LineTraceSingleByChannel(hit, startLocation, endLocation, ECollisionChannel::ECC_PhysicsBody, param);
-			DrawDebugLine(GetWorld(), startLocation, endLocation, FColor::Red, true, -1, 0, 2.f);
+			endLocation = startLocation + GetActorUpVector() * rayLength;
+			GetWorld()->LineTraceSingleByProfile(hit, startLocation, endLocation, FName("UE4_PlateformerCharacter"));
+			//GetWorld()->LineTraceSingleByChannel(hit, startLocation, endLocation, ECollisionChannel::ECC_PhysicsBody, param);
+			DrawDebugLine(GetWorld(), startLocation, endLocation, FColor::Red, true, -1, 0, 4.f);
 
 			if (hit.GetActor())
 			{
-				UE_LOG(LogTemp, Warning, TEXT("Le joueur a ete piquer !"));
-
 				if (AUE4_PlateformerCharacter* player = Cast<AUE4_PlateformerCharacter>(hit.GetActor()))
 				{
 					if (AUE4_PlateformerGameMode* GM = Cast<AUE4_PlateformerGameMode>(GetWorld()->GetAuthGameMode()))

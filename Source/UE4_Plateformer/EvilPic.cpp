@@ -57,7 +57,7 @@ void AEvilPic::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	//if (!useOverlap)
+	if (!useOverlap)
 	{
 		FHitResult hit;
 

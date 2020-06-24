@@ -55,8 +55,5 @@ void AUE4_PlateformerGameMode::LoadNextLevel(FName name)
 void AUE4_PlateformerGameMode::GameOver()
 {
 	UE_LOG(LogTemp, Error, TEXT("GAME OVER ----- Le joueur a ete toucher par un mechant ! RELOAD"));
-	FString currentLevel = GetWorld()->GetMapName();
-	FName name;
-	name.AppendString(currentLevel);
-	UGameplayStatics::OpenLevel(GetWorld(), name);
+	UGameplayStatics::OpenLevel(this, FName(*GetWorld()->GetName()), false);
 }

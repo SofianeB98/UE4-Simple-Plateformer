@@ -25,6 +25,8 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Parametre")
 	float timeZoneModifier = 2.0f;
+
+	FVector zonePos;
 	
 public:
 	UFUNCTION()
@@ -33,6 +35,8 @@ public:
 	UFUNCTION()
 	void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
+	void UpdatePositionForFirstOverlapping();
+	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 

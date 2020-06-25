@@ -4,6 +4,7 @@
 #include "TimeZone.h"
 
 #include "AffectedByTime.h"
+#include "TimerManager.h"
 
 // Sets default values
 ATimeZone::ATimeZone()
@@ -17,13 +18,26 @@ ATimeZone::ATimeZone()
 
 	BoxComponent->OnComponentBeginOverlap.AddDynamic(this, &ATimeZone::OnOverlapBegin);
 	BoxComponent->OnComponentEndOverlap.AddDynamic(this, &ATimeZone::OnOverlapEnd);
+
+	zonePos = FVector();
 }
 
 // Called when the game starts or when spawned
 void ATimeZone::BeginPlay()
 {
 	Super::BeginPlay();
+
+	this->zonePos = GetActorLocation();
+	FTimerHandle MemberTimerHandle;
+	SetActorLocation(FVector(-5000.0f, 0, 0));
+	GetWorld()->GetTimerManager().SetTimer(MemberTimerHandle, this, &ATimeZone::UpdatePositionForFirstOverlapping, .8f, false, .2f);
 }
+
+void ATimeZone::UpdatePositionForFirstOverlapping()
+{
+	SetActorLocation(zonePos);
+}
+
 
 void ATimeZone::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
